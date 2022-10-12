@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Role } from 'src/app/shared/models/roles';
 import { User } from 'src/app/shared/models/user';
 
 @Component({
@@ -17,15 +16,6 @@ export class AdminComponent implements OnInit {
 
     ngOnInit() {
         this.loading = true;
-        this.users = [{
-          id: 101,
-          firstName: "Shreyansh",
-          lastName: "Jain",
-          username: "admin",
-          role: Role.Admin,
-          token: "xyz",
-          url:"admin"
-        }];
     }
 
 }

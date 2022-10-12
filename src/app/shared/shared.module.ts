@@ -20,10 +20,11 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     FormsModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    
   ],
   providers: [],
   bootstrap: [],
-  exports:[QrCodeGeneratorComponent, QrCodeReaderComponent]
+  exports:[QrCodeGeneratorComponent, QrCodeReaderComponent, MatIconModule]
 })
 export class SharedModule { }

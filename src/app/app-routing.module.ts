@@ -19,9 +19,8 @@ const routes: Routes = [
     component: QrCodeGeneratorComponent
   },
   {
-        path: '',
-        component: DashboardComponent,
-        canActivate: [AuthGuard]
+        path: 'dashboard',
+        component: DashboardComponent
     },
     {
         path: 'admin',

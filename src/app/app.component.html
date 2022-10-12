@@ -14,6 +14,40 @@
   <img width="40" alt="Food Processing Chain Logo" src="../assets/icons/dip.png" />
   <span>Food Processing Chain</span>
   <div class="spacer"></div>
+  <header class="navbar navbar-expand">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Home</a>
+      </li>
+
+      <!-- Authorized only -->
+      <li class="nav-item " *ngIf="isAuthorized">
+        <a class="nav-link" [routerLink]="['/user']" routerLinkActive="active">User</a>
+      </li>
+
+      <!-- Admin only -->
+      <li class="nav-item" *ngIf="isAdmin">
+        <a class="nav-link" [routerLink]="['/admin', '/dashboard']" routerLinkActive="active">Dashboard</a>
+      </li>
+
+      <!-- Anonymous only -->
+      <li class="nav-item" *ngIf="!isAuthorized">
+        <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active">Login</a>
+      </li>
+
+      <!-- Authorized only -->
+      <li class="nav-item" *ngIf="isAuthorized">
+        <a class="nav-link" (click)="logout()">Logout</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+      <span class="badge badge-warning" *ngIf="isAuthorized">Authorized
+        <span *ngIf="isAdmin">(Admin)</span>
+        <span *ngIf="isUser">(User)</span>
+      </span>
+    </span>
+  </header>
+
   <a aria-label="Angular on twitter" target="_blank" rel="noopener" href="https://twitter.com/angular" title="Twitter">
     <svg id="twitter-logo" height="24" data-name="Logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
       <rect width="400" height="400" fill="none" />
@@ -42,7 +76,13 @@
     <span>{{ title }}</span>
 
   </div>
-  <router-outlet></router-outlet>
+
+
+  <div class="jumbotron">
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 
 
   <!-- Resources -->

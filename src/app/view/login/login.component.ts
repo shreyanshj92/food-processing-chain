@@ -15,6 +15,8 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     error = '';
+    
+  
 
     constructor(
         private formBuilder: FormBuilder,
@@ -23,7 +25,7 @@ export class LoginComponent implements OnInit {
         private authenticationService: AuthenticationService
     ) { 
         // redirect to home if already logged in
-            this.router.navigate(['/']);
+            // this.router.navigate(['/']);
         
     }
 
@@ -48,9 +50,17 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         
         const user = this.authenticationService.login(this.f["username"].value, this.f["password"].value);
-        // get return url from query parameters or default to home page
-                    // const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-        this.router.navigateByUrl(user.url);
+        
+        this.authenticationService.user.subscribe((userDetails:any)=>{
+            if(userDetails?.role === "Admin"){
+                this.router.navigate(['/admin']);
+            } else if(userDetails?.role === "User") {
+                this.router.navigate(['/user']);
+            }else {
+                this.router.navigate(['/']);
+            }
+            
+        })
         this.loading = false;
           
     }

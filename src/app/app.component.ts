@@ -1,7 +1,7 @@
 import { AuthenticationService } from './shared/authentication.service';
 import { Component } from '@angular/core';
 import { Role } from './shared/models/roles';
-import { User } from './shared/models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,17 +10,20 @@ import { User } from './shared/models/user';
 })
 export class AppComponent {
   title = 'Food Processing Chain';
-  user: User = new User();
 
-    constructor(private authenticationService: AuthenticationService) {
-        this.authenticationService.user.subscribe(x => this.user = x);
-    }
+  constructor(private router: Router, private authService: AuthenticationService) { }
+  get isAuthorized() {
+    return this.authService.isAuthorized();
+  }
+  get isAdmin() {
+    return this.authService.hasRole(Role.Admin);
+  }
 
-    get isAdmin() {
-        return this.user && this.user.role === Role.Admin;
-    }
-
-    logout() {
-        this.authenticationService.logout();
-    }
+  get isUser() {
+    return this.authService.hasRole(Role.User);
+  }
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['login']);
+  }
 }

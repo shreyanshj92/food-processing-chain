@@ -1,72 +1,45 @@
-import { BehaviorSubject, Observable } from 'rxjs';
-
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Role } from './models/roles';
-import { Router } from '@angular/router';
-import { User } from './models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-
-  private userSubject: BehaviorSubject<User>;
-    public user: Observable<User>;
-
-    constructor(
-        private router: Router,
-        private http: HttpClient
-    ) {
-      const user = {
-          id: 101,
-          firstName: "Shreyansh",
-          lastName: "Jain",
-          username: "admin",
-          role: Role.User,
-          token: "xyz",
-          url:"admin"
-        }
-        this.userSubject = new BehaviorSubject<User>(user);
-        this.user = this.userSubject.asObservable();
+userDetail!:any;
+ user: any = new BehaviorSubject({});
+    isAuthorized() {
+        return !!this.userDetail;
     }
-
-    public get userValue(): User {
-        return this.userSubject.value;
+    hasRole(role: Role) {
+        return this.isAuthorized() && this.userDetail.role === role;
     }
-
-    login(username: string, password: string) {
-     const users = [
-    { id: 1, username: 'admin', password: 'admin', firstName: 'Admin', lastName: 'User', role: Role.Admin, url:"../admin"},
-    { id: 2, username: 'user', password: 'user', firstName: 'Normal', lastName: 'User', role: Role.User, url:"user" }
-];
-
-        const user = users.filter(user => user.username === username && user.password === password)[0];
-      localStorage.setItem('user', JSON.stringify(user));
-                this.userSubject.next(user);
-                return user;
-        // return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
-        //     .pipe(map(user => {
-        //         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        //         localStorage.setItem('user', JSON.stringify(user));
-        //         this.userSubject.next(user);
-        //         return user;
-        //     }));
+    login(userName:string,password:string) {
+      // Call API to get JWT Token
+      const adminjwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmFtZSI6IkpvaG4gRG9lIiwicm9sZSI6IkFkbWluIn0.PFPNmg9TbnGr3CEML42Zq-qmJ8GA0QUGl1UIgNqQIYU";
+      const userjwt ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIiLCJuYW1lIjoiSm9obiBEb2UiLCJyb2xlIjoiVXNlciJ9.EtnPIRs8psxKtwSqM4X0HupKioeWJgwv8FVFXAiF2mI";
+      if(userName==="admin" && password==="admin"){
+        this.userDetail = this.parseJwt(adminjwt)
+      } else if(userName==="user" && password==="user"){
+        this.userDetail = this.parseJwt(userjwt)
+      }else{
+        this.userDetail = this.parseJwt("");
+      }
+     
+      this.user.next(this.userDetail);
     }
-
     logout() {
-        // remove user from local storage to log user out
-        localStorage.removeItem('user');
-        const user = {
-          id: 0,
-          firstName: "",
-          lastName: "",
-          username: "",
-          role: Role.Admin,
-          token: "",
-          url:""
-        };
-        this.userSubject.next(user);
-        this.router.navigate(['/login']);
+      this.userDetail = null;
+      this.user.next(null);
     }
+
+    parseJwt (token: any) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
+  };
 }
