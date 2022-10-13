@@ -7,11 +7,12 @@ import { NgModule } from '@angular/core';
 import { QrCodeGeneratorComponent } from './shared/components/qr-code-generator/qr-code-generator.component';
 import { QrCodeReaderComponent } from './shared/components/qr-code-reader/qr-code-reader.component';
 import { Role } from './shared/models/roles';
+import { UserComponent } from './view/user/user/user.component';
 
 const routes: Routes = [
   {
-    path:"scanner",
-    component:QrCodeReaderComponent
+    path: "scanner",
+    component: QrCodeReaderComponent
   },
 
   {
@@ -19,35 +20,37 @@ const routes: Routes = [
     component: QrCodeGeneratorComponent
   },
   {
-        path: 'dashboard',
-        component: DashboardComponent
-    },
-    {
-        path: 'admin',
-        component: QrCodeGeneratorComponent,
-        canActivate: [AuthGuard],
-        data: { roles: [Role.Admin] }
-    },
-    {
-        path: 'user',
-        component: QrCodeReaderComponent,
-        canActivate: [AuthGuard],
-        data: { roles: [Role.User] }
-    },
-    {
-        path: 'login',
-        component: LoginComponent
-    },
+    path: 'dashboard',
+    component: DashboardComponent
+  },
+  {
+    path: 'admin',
+    component: QrCodeGeneratorComponent,
+    canActivate: [AuthGuard],
+    data: { roles: [Role.Admin] }
+  },
+  {
+    path: 'user',
+    component: UserComponent,
+    canActivate: [AuthGuard],
+    canLoad:[AuthGuard],
+    loadChildren:()=>import('./view/user/user.module').then(m=>m.UserModule),
+    data: { roles: [Role.User] }
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
 
-    // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+  // otherwise redirect to home
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  
 
 
-exports: [RouterModule]
+
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }

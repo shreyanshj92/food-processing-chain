@@ -1,8 +1,6 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MaterialModule } from './mterial.module';
 import { NgModule } from '@angular/core';
 import { QRCodeModule } from 'angularx-qrcode';
 import { QrCodeGeneratorComponent } from './components/qr-code-generator/qr-code-generator.component';
@@ -14,17 +12,16 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
     QrCodeGeneratorComponent, QrCodeReaderComponent
   ],
   imports: [
-    BrowserModule,
+  
+  CommonModule,
     QRCodeModule,
     ZXingScannerModule,
     FormsModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
+    MaterialModule
     
   ],
   providers: [],
   bootstrap: [],
-  exports:[QrCodeGeneratorComponent, QrCodeReaderComponent, MatIconModule]
+  exports:[QrCodeGeneratorComponent, QrCodeReaderComponent, MaterialModule]
 })
 export class SharedModule { }

@@ -14,7 +14,8 @@ export class LoginComponent implements OnInit {
    loginForm: FormGroup = new FormGroup({});
     loading = false;
     submitted = false;
-    error = '';
+    
+    validationMessage="";
     
   
 
@@ -49,16 +50,19 @@ export class LoginComponent implements OnInit {
 
         this.loading = true;
         
-        const user = this.authenticationService.login(this.f["username"].value, this.f["password"].value);
+        this.authenticationService.login(this.f["username"].value, this.f["password"].value);
         
         this.authenticationService.user.subscribe((userDetails:any)=>{
+            if(userDetails){
             if(userDetails?.role === "Admin"){
                 this.router.navigate(['/admin']);
             } else if(userDetails?.role === "User") {
                 this.router.navigate(['/user']);
-            }else {
-                this.router.navigate(['/']);
             }
+            this.validationMessage = ""
+        }else {
+            this.validationMessage = "Enter Valid credentials"
+        }
             
         })
         this.loading = false;

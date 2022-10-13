@@ -23,7 +23,7 @@ userDetail!:any;
       } else if(userName==="user" && password==="user"){
         this.userDetail = this.parseJwt(userjwt)
       }else{
-        this.userDetail = this.parseJwt("");
+        this.userDetail = null;
       }
      
       this.user.next(this.userDetail);
